@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.html": "html",
+        "iostream": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "ostream": "cpp",
+        "new": "cpp",
+        "iosfwd": "cpp",
+        "queue": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "enabled"
+}
