@@ -3,6 +3,7 @@
 #include <queue>
 using namespace std;
 
+// Q1. Reverse a queue
 void reverseQueue(queue<int> &q){ // Using Stack //TC: O(n) SC:O(n) Same Effective Space
   stack<int> st;
 
@@ -34,6 +35,7 @@ void reverseQueueRecursion(queue<int> &q){ // TC: O(n) SC: O(n)
   q.push(temp);
 }
 
+// Q2. Reverse first K elements of a queue
 void reverseFirstKQueue(queue<int> &q,int k){ // TC: O(n) SC: O(n)
   if(k==0 || k>q.size()){
     return;
@@ -69,6 +71,7 @@ void reverseFirstKQueue(queue<int> &q,int k){ // TC: O(n) SC: O(n)
   }
 }
 
+// Q3. Interleave first and second half of a queue
 void interleaveQueue(queue<int> &first){
   queue<int> second;
   int size = first.size();
@@ -99,6 +102,7 @@ void interleaveQueue(queue<int> &first){
   }
 }
 
+// Q4. Find first negative integer in every window of size k
 void firstNegativeinKWindow(int *arr, int n,int k){
   // SLIDING WINDOW APPROACH
   queue<int> q;
