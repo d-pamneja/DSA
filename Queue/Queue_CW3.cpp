@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stack>
 #include <queue>
+#include <deque>
 using namespace std;
 
 // Q1. First Non Repeating/Unique Character in a String (Leetcode-387)
