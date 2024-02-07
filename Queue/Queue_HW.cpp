@@ -218,6 +218,84 @@ int findTheWinner(int n, int k) {
     return q.front();
 }
 
+// Q6. Reveal Cards In Increasing Order (Leetcode-950)
+vector<int> deckRevealedIncreasing(vector<int>& deck) {
+    sort(deck.begin(),deck.end());
+    vector<int> ans(deck.size());
+    queue<int> q;
+
+    for(int i=0;i<ans.size();i++) // Put all indices of ans in queue
+        q.push(i);
+    
+    for(int i=0;i<ans.size();i++){ // Reverse Simulation + Fill the answer
+        // Reveal step
+        ans[q.front()] = deck[i];
+        q.pop();
+
+        // Push front to bottom
+        if(!q.empty()){
+            q.push(q.front());
+            q.pop();
+        }
+
+        // sort -> {2,3,5,7,11,13,17}
+
+        // queue -> {0,1,2,3,4,5,6}
+
+        // ans -> {0,0,0,0,0,0,0}
+    }
+
+    return ans;
+}
+
+// Q7. Number of People Aware of a Secret (Leetcode-1953) - V.V.Imp
+int peopleAwareOfSecret(int n, int delay, int forget) {
+    const int M = 1e9 + 7;
+
+
+    int curr = 0; // Active Spreader
+    int ans = 1; // No. of people who know the secret
+
+    queue<pair<int,int>> delayQ,forgetQ; // <uss din, kitne logo ko secret pata laga>
+    
+    delayQ.push({1,1});
+    forgetQ.push({1,1});
+
+    for(int i=1;i<=n;++i){
+            // Step1. Active spreaders and person who know ko kaam karo
+            if(!forgetQ.empty() && forgetQ.front().first + forget <= i){ // Matlab kya jis din usse pata chala secret, kya uss din ko 'forget' days ho gaye hai i.e. yeh log bholne walle hai 
+            auto front = forgetQ.front();
+            forgetQ.pop();
+
+            auto num = front.second; // Means number of people jinko aaj bholne walla hai secret
+            ans = (ans - num + M)%M;
+            curr = (curr - num + M)%M;
+            }
+
+            // Step2. Make new active spreaders
+            if(!delayQ.empty() && delayQ.front().first + delay <= i){ // Matlab kya jis din usse pata chala secret, kya uss din ko 'delay' days ho gaye hai i.e. yeh log secret spread karna shuru karne walle hai matlab active hone walle hai
+            auto front = delayQ.front();
+            delayQ.pop();
+
+            auto num = front.second; // Means number of people jinko aaj active honne walle hai
+            curr = (curr + num)%M; // Means jitne logo ko abh secret pata chal jayega, as active person will tell one person each
+            }
+
+            // Step3. Spread the secret
+            if(curr>0){
+                ans = (ans + curr)%M;
+                delayQ.push({i,curr}); // Cause yehi log kuch din mein active honne walle hai
+                forgetQ.push({i,curr}); // Cause jo log current hai abhi utne hi aaj add hue hongay
+            }
+    }
+
+    return ans;
+    
+}
+
+
+
+
 int main(){
     return 0;
 }
