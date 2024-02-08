@@ -4,7 +4,7 @@ using namespace std;
 
 // IMPORTANT: In Queue, Push happens from Back. While, Pop happens from Front
 
-class Queue{ // Implement queue using Array
+class Queue{ // Implement queue using Dynammic Array
   public:
     int *arr;
     int size;
@@ -23,7 +23,7 @@ class Queue{ // Implement queue using Array
         cout<<"Queue Overflow"<<endl;
         return;
       }
-      else if(front==-1 && rear==-1){ // Means empty queue
+      else if(front==-1 && rear==-1){ // Means empty queue (bhool jata hoon main ye condition)
           front++;
           rear++;
           arr[rear] = val;
@@ -41,7 +41,7 @@ class Queue{ // Implement queue using Array
           cout<<"Queue underflow"<<endl;
           return;
         }
-        else if(front==rear){ // Means single element
+        else if(front==rear){ // Means single element (bhool jata hoon main ye condition)
           arr[front] = -1;
           rear = -1;
           front = -1;
@@ -62,7 +62,7 @@ class Queue{ // Implement queue using Array
       }
 
       int getSize(){
-        if(front!=-1 && rear!=-1){
+        if(front!=-1 && rear!=-1){ //(bhool jata hoon main ye condition)
           return rear-front+1 ;
         }
         else{
@@ -98,10 +98,20 @@ class Queue{ // Implement queue using Array
         cout<<endl;
       }
 
+      ~Queue(){
+        delete arr;
+      }
+
 };
 
+/* Now, upar wali queue has a disdvantage that it can't be used again after it's full.
+// JAB front and rear pointer array ke Last index par honge
+// To iss code ki help se hum kisi element ko insert nhi kar sete haz i.e. we CANNOT PUSH
+// joki queue ki algorithm ke according array ki Oth index
+// par insert hona chaive iska mtlb memory space waste he rha hai ›- Iska solution Circular Queue hai
+*/
 
-class CirQueue{ // Implement circular queue using Array
+class CirQueue{ // Implement circular queue using Dynammic Array
   public:
     int *arr;
     int size;
@@ -116,25 +126,25 @@ class CirQueue{ // Implement circular queue using Array
     }
 
     void push(int val){ // We use rear to push
-    if((front==0 && rear==size-1)||rear==front-1){ // Queue Full
-      cout<<"Queue Overflow"<<endl;
-      return;
-    }
-    else if(front==-1 && rear==-1){ // Means empty queue
-        front++;
-        rear++;
-        arr[rear] = val;
+      if((front==0 && rear==size-1)||rear==front-1 ){ // Queue Full (bhool jata hoon main ye condition)
+        cout<<"Queue Overflow"<<endl;
         return;
       }
-    else if(rear==size-1 && front!=0){ // Circular Case
-      rear = 0;
-      arr[rear] = val;
-    }
-    else{ // Normal Insert
-        rear++;
+      else if(front==-1 && rear==-1){ // Means empty queue
+          front++;
+          rear++;
+          arr[rear] = val;
+          return;
+        }
+      else if(rear==size-1 && front!=0){ // Circular Case //(bhool jata hoon main ye condition)
+        rear = 0;
         arr[rear] = val;
-        return;
       }
+      else{ // Normal Insert
+          rear++;
+          arr[rear] = val;
+          return;
+        }
     }
 
     void pop(){ // We use front to pop
@@ -147,7 +157,7 @@ class CirQueue{ // Implement circular queue using Array
         rear = -1;
         front = -1;
       }
-      else if(front == size-1){ // Circular Case
+      else if(front == size-1){ // Circular Case //(bhool jata hoon main ye condition)
         arr[front] = -1;
         front = 0;
       }
@@ -209,7 +219,7 @@ class CirQueue{ // Implement circular queue using Array
 
 };
 
-class DeQue{ // Implement DE queue using Array (This is circular in nature)
+class DeQue{ // Implement Circular DE queue using Array
   public:
     int *arr;
     int size;
@@ -224,7 +234,7 @@ class DeQue{ // Implement DE queue using Array (This is circular in nature)
     }
 
     void pushFront(int val){
-      if((front==0 && rear==size-1)||rear==front-1){ // Queue Full
+      if((front==0 && rear==size-1)||rear==front-1){ // Queue Full (bhool jata hoon main ye condition)
         cout<<"Queue Overflow"<<endl;
         return;
       }
@@ -233,7 +243,7 @@ class DeQue{ // Implement DE queue using Array (This is circular in nature)
         rear++;
         arr[front] = val; 
       }
-      else if(front==0 && rear!=size-1){ // Circular Case
+      else if(front==0 && rear!=size-1){ // Circular Case (bhool jata hoon main ye condition)
         front = size - 1;
         arr[front] = val;
       }
@@ -295,7 +305,7 @@ class DeQue{ // Implement DE queue using Array (This is circular in nature)
         rear = -1;
         front = -1;
       }
-      else if(rear==0){ // Circular Case
+      else if(rear==0){ // Circular Case (bhool jata hoon main ye condition)
         arr[rear] = -1;
         rear = size-1;
       }
