@@ -3,7 +3,7 @@
 #include <queue>
 using namespace std;
 
-// Q1. Reverse a queue
+// Q1. Reverse a queue using stack
 void reverseQueue(queue<int> &q){ // Using Stack //TC: O(n) SC:O(n) Same Effective Space
   stack<int> st;
 
