@@ -293,6 +293,126 @@ int peopleAwareOfSecret(int n, int delay, int forget) {
     
 }
 
+// Q8. Rotten Oranges (Leetcode-994) - V.V.V.V.Imp
+int orangesRotting(vector<vector<int>>& grid) {
+    // Queue approach
+    int time = -1;
+    int noOfRottenOrg = 0;
+    int noOfFreshOrg = 0;
+
+    queue<pair<int,int>> q; // To store the index's of rotten oranges, both present and future
+
+    int n = grid.size();
+    int m = grid[0].size();
+
+    for(int i=0;i<n;i++){ // Traverse the grid once to fetch no of fresh and rotten oranges
+        for(int j=0;j<m;j++){
+            // Case 1. If the orange is rotten
+            if(grid[i][j]==2){
+                q.push({i,j}); // Push the index of the rotten orange
+                grid[i][j] == -1; // Elemenating the value
+                noOfRottenOrg++;
+            }
+
+            // Case 2. If the orange is fresh
+            if(grid[i][j]==1){
+                noOfFreshOrg++;
+            }
+        }
+    }
+
+    // Base checks before proceeding
+    if(noOfFreshOrg==0) return 0; // Means immediately all are rotten as no fresh oranges exist
+    else if(noOfFreshOrg!=0 && noOfRottenOrg==0) return -1; // Means since no rotten oranges exist at intitial stage, answer is not possible
+    else if(noOfFreshOrg==0 && noOfRottenOrg!=0) return 0; // Means all are rotten so no time needed
+
+    int futureRottenOrg = 0;
+
+    while(!q.empty()){
+        time++;
+
+        int size = q.size();
+
+        for(int k=0;k<size;k++){ // We use this loop to make all adjacent oranges rotten of a given rotten orange
+            
+            int i = q.front().first;
+            int j = q.front().second;
+
+            // Upwards
+            if((i-1)>=0 && grid[i-1][j]==1){ // Means if a fresh orange exists upwards
+                q.push({i-1,j}); // Push this orange to the queue as it becomes rotten as in future, it will rot further oranges
+                grid[i-1][j] = -1; // Elemenate the value
+                futureRottenOrg++;
+            }
+
+            // Downwards
+            if((i+1)<n && grid[i+1][j]==1){ // Means if a fresh orange exists downwards
+                q.push({i+1,j}); // Push this orange to the queue as it becomes rotten as in future, it will rot further oranges
+                grid[i+1][j] = -1; // Elemenate the value
+                futureRottenOrg++;
+            }
+
+            // Rightwards
+            if((j+1)<m && grid[i][j+1]==1){ // Means if a fresh orange exists rightwards
+                q.push({i,j+1}); // Push this orange to the queue as it becomes rotten as in future, it will rot further oranges
+                grid[i][j+1] = -1; // Elemenate the value
+                futureRottenOrg++;
+            }
+
+            // Leftwards
+            if((j-1)>=0 && grid[i][j-1]==1){ // Means if a fresh orange exists leftwards
+                q.push({i,j-1}); // Push this orange to the queue as it becomes rotten as in future, it will rot further oranges
+                grid[i][j-1] = -1; // Elemenate the value
+                futureRottenOrg++;
+            }
+
+            // Finally, we pop the orange for which we were getting the answer
+            q.pop();
+        }
+
+    }
+
+    if(futureRottenOrg!=noOfFreshOrg) return -1;
+    else return time;
+}
+
+// Q9. Overlapping Intervals (Leetcode-56) - V.V.Imp
+static bool myComp(const vector<int>& a, const vector<int>& b) {
+    return a[0] < b[0];
+};
+
+vector<vector<int>> merge(vector<vector<int>>& intervals) {
+    if(intervals.empty()){
+        return vector<vector<int>>();
+    }
+    
+    sort(intervals.begin(),intervals.end(),myComp);
+    
+    stack<vector<int>>st;
+    
+    st.push(intervals[0]); // Push first element
+    
+    for(int i=1;i<intervals.size();i++){
+        vector<int> element = intervals[i];
+        vector<int> &top = st.top();
+        
+        if(element[0] <= top[1]){ // If the starting of element collides with the end of previous inetrval, we merge these two
+            top[1] = max(top[1],element[1]); // Make the end of item at top as the maximum of the two end times
+        }
+        else{
+            st.push(element);
+        }
+    }
+    
+    // Convert the stack to a vector - Nice method, dekh lena ek baar
+    vector<vector<int>> mergedIntervals;
+    while (!st.empty()) {
+        mergedIntervals.insert(mergedIntervals.begin(), st.top());
+        st.pop();
+    }
+    
+    return mergedIntervals;
+}
 
 
 
