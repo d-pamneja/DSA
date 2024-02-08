@@ -310,8 +310,8 @@ class DeQue{ // Implement Circular DE queue using Array
         rear = size-1;
       }
       else{ // Means not empty and more than 1 element
-        arr[front] = -1;
-        front++;
+        arr[rear] = -1;
+        rear--;
       }
 
     }

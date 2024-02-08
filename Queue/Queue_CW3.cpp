@@ -141,7 +141,7 @@ vector<int> maxSlidingWindow(vector<int>& nums, int k) {
             // Chotte elements ko pop kardo
         int ele = nums[i];
 
-        // Jitne bhi queue ke andar iss element se chotte hai remvove kardo
+        // Jitne bhi queue ke andar iss element se chotte hai remvove kardo // imp
         while(!dq.empty() && ele > nums[dq.back()]){
             dq.pop_back();
         }
