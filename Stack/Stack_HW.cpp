@@ -185,7 +185,7 @@ bool isValid(string s) {
     
 }
 
-//Q6. Longest Valid Parentheses - (Leetcode 32) - V.V. IMPint longestValidParentheses(string s) {
+//Q6. Longest Valid Parentheses - (Leetcode 32) - V.V.V. IMP
 int longestValidParentheses(string s) { // TC : O(n) SC : O(n)
 
     stack<int> st;
@@ -662,6 +662,42 @@ vector<double> getCollisionTimes(vector<vector<int>>& cars) { // TC : O(n) SC : 
     }
 
     return answers;
+}
+
+// Q18. Final Prices With a Special Discount in a Shop (Leetcode-1475)
+vector<int> finalPrices(vector<int>& prices) {
+    stack<int> st;
+    st.push(-1);
+
+    vector<int> dist(prices.size(),-1);
+    vector<int> final(prices.size());
+
+    for(int i=prices.size()-1;i>=0;i--){
+        int num = prices[i];
+
+        while(st.top()!=-1 && prices[st.top()]>num){
+            st.pop();
+        }
+        if(st.top()==-1){
+            dist[i] = i;
+        }
+        else{
+            dist[i] = st.top();
+        }
+        
+        st.push(i);
+    }
+
+    for(int i=0;i<prices.size();i++){
+        if(dist[i]==i){
+            final[i] = prices[i];
+        }
+        else{
+            final[i] = prices[i] - prices[dist[i]];
+        }
+    }
+
+    return final;
 }
 
 
