@@ -498,7 +498,7 @@ public:
     
     void visit(string url) {
         BrowserStack.push(url);
-        while(!ForwardStack.empty()){
+        while(!ForwardStack.empty()){ // Bhool jata hoon ki forward stack bhi toh empty karni hai
             ForwardStack.pop();
         }
     }
