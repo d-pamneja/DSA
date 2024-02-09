@@ -98,7 +98,7 @@ public:
     }
 };
 
-// Q3. Sum of min/max element of all subarray of size "k"
+// Q3. Sum of min/max element of all subarray of size "k" (Leetcode-1696) - V.V.V.V.Imp
 vector<int> sumofminmaxofallwindowofsizek(vector<int>& nums, int k,int &sol) {
     vector<int> ans;
     deque<int> dq1;
