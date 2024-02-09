@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stack>
+#include <queue>
 #include<string.h>
 using namespace std;
 
@@ -700,6 +701,46 @@ vector<int> finalPrices(vector<int>& prices) {
     return final;
 }
 
+// Q19. Stack Permutations - (GFG) - V.V IMP
+int isStackPermutation(int N,vector<int> &A,vector<int> &B){
+    queue<int> input;
+    queue<int> output;
+    
+    for(auto el:A){
+        input.push(el);
+    }
+    
+    for(auto el:B){
+        output.push(el);
+    }
+    
+    stack<int> tempStack;
+    
+    while(!input.empty()){
+        int element = input.front();
+        input.pop();
+        
+        if(element==output.front()){
+            output.pop();
+            while(!tempStack.empty()){
+                int temp = tempStack.top();
+                if(temp==output.front()){
+                    tempStack.pop();
+                    output.pop();
+                }
+                else{
+                    break;
+                }
+            }
+        }
+        else{
+            tempStack.push(element);
+        }
+    }
+    
+    return (input.empty() && tempStack.empty());
+    
+}
 
 
 int main(){

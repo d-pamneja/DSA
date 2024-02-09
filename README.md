@@ -972,6 +972,7 @@ CLASS HOMEWORK: 34
 	17. Asteroid Collision
 	18. Design Browser History
 	19. Final Prices With a Special Discount in a Shop (Leetcode-1475)
+	20. Stack Permutations - (GFG) 
 
 ```
 
@@ -1031,6 +1032,9 @@ HOMEWORK NOTES: 37
 	11. Product of the Last K Numbers
 	12. Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit
 	13. Delivering Boxes from Storage to Ports
+	14. Overlapping Intervals (Leetcode-56)
+	15. Rotten Oranges (Leetcode-994)
+	
 
 ```
 
