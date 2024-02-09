@@ -98,7 +98,7 @@ public:
     }
 };
 
-// Q3. Sum of min/max element of all subarray of size "k" (Leetcode-1696) - V.V.V.V.Imp
+// Q3. Sum of min/max element of all subarray of size "k" 
 vector<int> sumofminmaxofallwindowofsizek(vector<int>& nums, int k,int &sol) {
     vector<int> ans;
     deque<int> dq1;
@@ -248,7 +248,22 @@ vector<int> deckRevealedIncreasing(vector<int>& deck) {
     return ans;
 }
 
-// Q7. Number of People Aware of a Secret (Leetcode-1953) - V.V.Imp
+// Q7. Number of People Aware of a Secret (Leetcode-2327) - V.V.Imp
+// Iska explaination hai: phele toh 2 queue banayi hai, ek delayQ aur ek forgetQ. 
+//Dono mein store hoga ki <uss din,kitne logo ko secret pata laga> 
+
+// Step1. Active spreaders and person who know ko kaam karo
+// Phele toh hum forgetQ ko check karenge, agar uska time aagaya hai toh usse pop karenge aur uske hisaab se ans aur curr ko update karenge.
+//agar forgetQ ke top element walle din (i.e. uss din) ko hue forget days ho gaye hai toh usse pop karo aur ans aur curr ko update karo by the number of people who knew the secret on that day
+
+// Step2. Make new active spreaders
+// Ab hum delayQ ko check karenge, agar uska time aagaya hai toh usse pop karenge aur uske hisaab se curr ko update karenge.
+// Yaha par, agar delayQ ke top element walle din (i.e. uss din) ko hue delay days ho gaye hai toh usse pop karo aur curr ko update karo by the number of people who will know the secret on that day
+
+// Step3. Spread the secret
+// Agar current >0, matlab some people are active spreaders, toh ans aur dono queue ko update karo
+// inko ans mein add kar do, and dono queue mein add kar do <that day, kitne logo ko secret pata laga> yaani {i,curr}
+
 int peopleAwareOfSecret(int n, int delay, int forget) {
     const int M = 1e9 + 7;
 
@@ -264,21 +279,21 @@ int peopleAwareOfSecret(int n, int delay, int forget) {
     for(int i=1;i<=n;++i){
             // Step1. Active spreaders and person who know ko kaam karo
             if(!forgetQ.empty() && forgetQ.front().first + forget <= i){ // Matlab kya jis din usse pata chala secret, kya uss din ko 'forget' days ho gaye hai i.e. yeh log bholne walle hai 
-            auto front = forgetQ.front();
-            forgetQ.pop();
+                auto front = forgetQ.front();
+                forgetQ.pop();
 
-            auto num = front.second; // Means number of people jinko aaj bholne walla hai secret
-            ans = (ans - num + M)%M;
-            curr = (curr - num + M)%M;
+                auto num = front.second; // Means number of people jinko aaj bholne walla hai secret
+                ans = (ans - num + M)%M;
+                curr = (curr - num + M)%M;
             }
 
             // Step2. Make new active spreaders
             if(!delayQ.empty() && delayQ.front().first + delay <= i){ // Matlab kya jis din usse pata chala secret, kya uss din ko 'delay' days ho gaye hai i.e. yeh log secret spread karna shuru karne walle hai matlab active hone walle hai
-            auto front = delayQ.front();
-            delayQ.pop();
+                auto front = delayQ.front();
+                delayQ.pop();
 
-            auto num = front.second; // Means number of people jinko aaj active honne walle hai
-            curr = (curr + num)%M; // Means jitne logo ko abh secret pata chal jayega, as active person will tell one person each
+                auto num = front.second; // Means number of people jinko aaj active honne walle hai
+                curr = (curr + num)%M; // Means jitne logo ko abh secret pata chal jayega, as active person will tell one person each
             }
 
             // Step3. Spread the secret
