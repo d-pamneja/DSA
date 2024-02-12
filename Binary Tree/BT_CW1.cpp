@@ -236,6 +236,14 @@ int diameterOfBinaryTree(TreeNode* root) { // BRUTE FORCE APPROACH if we do heig
     
 }
 
+// Q3. Generics tree
+
+// Q4. READ ARTICLE: Skew tree
+
+// Q5. READ ARTICLE: BFS and DFS Algorithm
+
+// Q6. READ ARTICLE: Complete and perfect binary tree
+
 
 int main() {
   Node* root1 = createTree();
