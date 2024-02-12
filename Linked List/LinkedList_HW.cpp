@@ -782,10 +782,6 @@ int getNthFromLast(Node *head, int n){
         
 }
 
-
-
-
-
 // Q16. 
 
 // Q1. Why Quick Sort preferred for Arrays and Merge Sort for Linked Lists?
