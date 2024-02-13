@@ -13,6 +13,12 @@ struct TreeNode {
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
+struct Node {
+    int data;
+    Node *left;
+    Node *right;
+};
+
 // Q1. Balanced Binary Tree (Leetcode - 110)
 // A tree is a balanced tree if at any given node, the height of left sub-tree and right sub-tree is AT MOST 1.
 
@@ -226,5 +232,41 @@ TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
 
     TreeNode* root = constructTreeFromPostAndInOrder(ValueToIndexMap,postorder,inorder,postIndex,inOrderStart,inOrderEnd);
     return root;
+}
+
+// Q7. Kth Ancestor of a Node in Binary Tree (GFG)
+bool solver(Node *root, int &k,int &node,int &ans){
+    // Base Case
+    if(root==NULL){ 
+        return false;
+    }
+
+    if(root->data==node){ 
+      return true;
+    }
+    
+    // Recursive Call
+    bool left = solver(root->left,k,node,ans);
+    bool right = solver(root->right,k,node,ans);
+  
+    if(left||right){ //checks if the target node is found in either subtree. If so, it decrements k, and if k reaches 0, it sets ans to the data of the current node and returns true. If the target node is not found, it returns false
+      k--;
+      if(k==0){
+        ans = root->data;
+      }
+      return true;
+    }
+    
+    return false; 
+  
+}
+
+int kthAncestor(Node *root, int k, int node)
+{
+    int ans = -1;
+    int count = k;
+    solver(root,count,node,ans);
+    
+    return ans;
 }
 
