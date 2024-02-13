@@ -130,9 +130,9 @@ void printRightView(Node *root, int level, vector<int> &rightView) {
 // Q3. Top View of a Binary Tree (GFG)
 void printTopView(Node* root){
   map<int,int> hdtoNodeMap;
-  queue<pair<Node*,int>> q; // This will store the Node and it's horizontal distance level (self logic). As we move left, we decrease the horizontal distance by 1 and as we move right, we increase the horizontal distance by 1
+  queue<pair<Node*,int> > q; // This will store the Node and it's horizontal distance level (self logic). As we move left, we decrease the horizontal distance by 1 and as we move right, we increase the horizontal distance by 1
 
-  q.push({root,0});
+  q.push(make_pair(root,0));
 
   while(!q.empty()){
     pair<Node*,int> temp = q.front();
@@ -147,19 +147,118 @@ void printTopView(Node* root){
 
     // child/children ko dekhna hai
     if(frontNode->left!=NULL){
-      q.push({frontNode->left,hd-1}); // Left jatte hue horizontal level se -1 hoga
+      q.push(make_pair(frontNode->left,hd-1)); // Left jatte hue horizontal level se -1 hoga
     }
     if(frontNode->right!=NULL){
-      q.push({frontNode->right,hd+1}); // Left jatte hue horizontal level se +1 hoga
+      q.push(make_pair(frontNode->right,hd+1)); // Left jatte hue horizontal level se +1 hoga
     }
   }
 
-  cout<<"Printing Top View : "<<endl;
+  cout<<"Printing Top View : ";
   for(auto i:hdtoNodeMap){
     cout<<i.second<<" ";
   }
   
 }
+
+// Q4. Bottom View of a Binary Tree (GFG)
+void printBottomView(Node* root){
+  map<int,int> hdtoNodeMap;
+  queue<pair<Node*,int> > q; // This will store the Node and it's horizontal distance level (self logic). As we move left, we decrease the horizontal distance by 1 and as we move right, we increase the horizontal distance by 1
+
+  q.push(make_pair(root,0));
+
+  while(!q.empty()){
+    pair<Node*,int> temp = q.front();
+    q.pop();
+
+    Node* frontNode = temp.first;
+    int hd = temp.second; // Agar iss horizontal distance ke liye answer store hua hai, toh  bhi ABH kar lo and agge badho
+
+ 
+    hdtoNodeMap[hd]=frontNode->val;
+    
+
+    // child/children ko dekhna hai
+    if(frontNode->left!=NULL){
+      q.push(make_pair(frontNode->left,hd-1)); // Left jatte hue horizontal level se -1 hoga
+    }
+    if(frontNode->right!=NULL){
+      q.push(make_pair(frontNode->right,hd+1)); // Left jatte hue horizontal level se +1 hoga
+    }
+  }
+
+  cout<<"Printing Bottom View : ";
+  for(auto i:hdtoNodeMap){
+    cout<<i.second<<" ";
+  }
+  
+}
+
+// Q5. Boundary Traversal of a Binary Tree (GFG)
+
+// here, we will divide the question in three segments, A(left boundary), B(leaf nodes), C(right boundary)
+
+// V.V.V.V IMP - In part A, leaf node se phele tak ka mattar print karna hai. Yaad se, just phele phele ka print karna hai, leaf node nahi. 
+// Toh, we have to only go ek jagah. Agar left mein kuch nahi hai, toh right mein jao, agar right mein kuch nahi hai, toh left mein jao. Dono mein maat jao, faltu traversal ho jayega
+
+void LeftBoundary(Node* root){
+    // Base Case
+    if(root==NULL){
+        return;
+    }
+    if(root->left==NULL && root->right==NULL){
+        return;
+    }   
+
+    // Printing value
+    cout<<root->val<<" ";
+
+    // Recursive Calls with A VERY VERY IMPORTANT CONDITION
+    if(root->left!=NULL){
+        printBottomView(root->left);
+    }
+    else{
+        printBottomView(root->right);
+    }
+}
+
+void LeafBoundary(Node* root){
+    // Base Case
+    if(root==NULL){
+        return;
+    }
+
+    if(root->left==NULL && root->right==NULL){
+        cout<<root->val<<" ";
+    }   
+
+    // Recursive Calls 
+    LeafBoundary(root->left);
+    LeafBoundary(root->right);
+}
+
+void RightBoundary(Node* root){
+    // Base Case
+    if(root==NULL){
+        return;
+    }
+    if(root->left==NULL && root->right==NULL){
+        return;
+    }   
+
+    // Printing value
+    cout<<root->val<<" ";
+
+    // Recursive Calls with A VERY VERY IMPORTANT CONDITION
+    if(root->right!=NULL){
+        printBottomView(root->right);
+    }
+    else{
+        printBottomView(root->left);
+    }
+}
+
 
 int main(){
 
@@ -187,7 +286,10 @@ int main(){
     }
 
     cout << endl;
-    cout << "Printing Top View : ";
     printTopView(root1);
+
+    cout << endl;
+    printBottomView(root1);
+    cout<<endl;
     return 0;
 }
