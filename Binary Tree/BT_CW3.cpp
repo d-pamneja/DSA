@@ -216,10 +216,10 @@ void LeftBoundary(Node* root){
 
     // Recursive Calls with A VERY VERY IMPORTANT CONDITION
     if(root->left!=NULL){
-        printBottomView(root->left);
+        LeftBoundary(root->left);
     }
     else{
-        printBottomView(root->right);
+        LeftBoundary(root->right);
     }
 }
 
@@ -247,16 +247,37 @@ void RightBoundary(Node* root){
         return;
     }   
 
-    // Printing value
-    cout<<root->val<<" ";
-
     // Recursive Calls with A VERY VERY IMPORTANT CONDITION
     if(root->right!=NULL){
-        printBottomView(root->right);
+        RightBoundary(root->right);
     }
     else{
-        printBottomView(root->left);
+        RightBoundary(root->left);
     }
+
+    // Processing (Printing value)
+    cout<<root->val<<" ";
+}
+
+void BoundaryTraversal(Node* root){
+    // Base Case
+    if(root==NULL){
+        return;
+    }
+
+    cout<<root->val<<" ";
+
+    // A. Left Boundary
+    LeftBoundary(root->left);
+
+    // B. Leaf Nodes
+    LeafBoundary(root->left);
+    LeafBoundary(root->right);
+
+    // C. Right Boundary
+    RightBoundary(root->right);
+    
+
 }
 
 
@@ -290,6 +311,10 @@ int main(){
 
     cout << endl;
     printBottomView(root1);
+    cout<<endl;
+
+    cout << "Printing Boundary Traversal View : ";
+    BoundaryTraversal(root1);
     cout<<endl;
     return 0;
 }
