@@ -71,4 +71,100 @@ bool isBalanced(TreeNode* root) {
     return balanced;
 }
 
-// Q3. 
+// Q3. Same Tree (Leetcode-100)
+bool isSameTree(TreeNode* p, TreeNode* q) {
+    // Base Cases
+    if(p==NULL && q==NULL){
+        return true;
+    }
+    else if(p==NULL && q!=NULL){
+        return false;
+    }
+    else if(p!=NULL && q==NULL){
+        return false;
+    }
+
+    if(p->val==q->val){ // If values are same, move simmultaneously to left and right sub-tree
+        bool left = isSameTree(p->left,q->left);
+        bool right = isSameTree(p->right,q->right);
+
+        return (left&&right);
+    }
+    else{
+        return false;
+    }
+    
+}
+
+// Q4. Symmetric Tree (Leetcode-101)
+bool isMirror(TreeNode* p, TreeNode* q) {
+    // Base Cases
+    if(p==NULL && q==NULL){
+        return true;
+    }
+    else if(p==NULL && q!=NULL){
+        return false;
+    }
+    else if(p!=NULL && q==NULL){
+        return false;
+    }
+
+    if(p->val==q->val){ // If values are same, move simmultaneously to left and right sub-tree, with alternate approach as we are comapring mirror values
+        bool left = isMirror(p->left,q->right);
+        bool right = isMirror(p->right,q->left);
+
+        return (left&&right);
+    }
+    else{
+        return false;
+    }    
+}
+
+bool isSymmetric(TreeNode* root) {
+    TreeNode* left = root->left;
+    TreeNode* right = root->right;
+
+    return isMirror(left,right);
+    
+}
+
+// Q5. Diagonal Traversal of Binary Tree (GFG)
+vector<int> diagonal(Node *root)
+{
+   // The catch here is that we print a node and assume that all elements to it's right are in the same diagonal
+   // The elements to it's left are to be handled later so we just push them in a queue for later use
+   
+   vector<int> ans;
+   if(!root){
+       return ans;
+   }
+   
+   queue<Node*> q;
+   q.push(root);
+   
+   while(!q.empty()){
+       Node* temp = q.front();
+       q.pop();
+       
+       while(temp){ // This loop will print all temps in the right diagonal 
+           ans.push_back(temp->val);
+           if(temp->left!=NULL){ // If left exists, toh baad mein dekhte hai
+               q.push(temp->left);
+           }
+           temp = temp->right; // Move to right
+       }
+   }
+   
+   return ans;
+   
+}
+
+
+
+
+
+
+
+int main(){
+    return 0;
+}
