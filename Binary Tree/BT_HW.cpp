@@ -2,6 +2,7 @@
 #include <queue>
 #include <vector>
 #include <map>
+#include <set>
 using namespace std;
 
 struct TreeNode {
@@ -158,6 +159,201 @@ vector<int> diagonal(Node *root)
    return ans;
    
 }
+
+// Q6. Vertical Traversal of Binary Tree (Leetcode-987) V.V.V.V.Imp
+vector<vector<int>> verticalTraversal(TreeNode* root) {
+    vector<vector<int>> ans; 
+    // Since we will be using big data structures, it will be better that we use them by reference when needed(if possible)
+    queue<pair<TreeNode*,pair<int,int>>> q; // A pair which contains: {TreeNode,{row,col}}
+    q.push({root,{0,0}}); // Root will start at origin
+
+    map<int,map<int,multiset<int> > >mp; // {col->{row->[x,y,z,..]}} :Basically, A map which stores: {col->map<row,multiset of all values in that row (sorted)>}. Basically, it is a map sorted by col (key), where the key has another map of all sorted by rows and a multiset of all values in that row(sorted ofc).
+    // We have used multiset cause the values should also be sorted. We could have used a vector and then sorted it, but then that will be done automatically by multiset
+
+    while(!q.empty()){ // Variant of level order traversal
+        auto front = q.front();
+        q.pop();
+
+        TreeNode* &node = front.first;
+        auto&coordinates = front.second;
+        int &row = coordinates.first;
+        int &col = coordinates.second;
+
+        mp[col][row].insert(node->val); // Map ke andar {col->{row->[x,y,z,..]}} format se entry insert kar do
+
+        // If we go left, we do row+1,col-1
+        if(node->left){
+            q.push({node->left,{row+1,col-1}});
+        }
+        if(node->right){ // If we go right, we do row+1,col+1
+            q.push({node->right,{row+1,col+1}});
+        }
+
+    }
+
+    // Store final vertical order into answer vector
+    for(auto it:mp){ // This will take all cols from left to right i.e. it is inserted in sorted order only
+        auto&ColMap = it.second;
+        vector<int> vLine;
+        for(auto colMapIt:ColMap){ // This will take all rows from top to bottom i.e. it is inserted in sorted order only
+            auto&mset = colMapIt.second;
+            vLine.insert(vLine.end(),mset.begin(),mset.end()); // Jo jo bhi mset mein pada hai usse utha kar as it daal do vLine ke end tak
+        }
+        ans.push_back(vLine);
+    }
+
+    return ans;
+}
+
+// Q7. ZigZag Traversal of Binary Tree (Leetcode-103)
+vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+    vector<vector<int>> ans;
+
+    // Base Case
+    if(!root){
+        return ans;
+    }
+
+    queue<TreeNode*> q;
+    bool LtoRDir = true;
+    q.push(root);
+
+    while(!q.empty()){
+        int width = q.size(); // Width of that level
+        vector<int> currLevel(width);
+
+        for(int i=0;i<width;i++){
+            TreeNode* front = q.front();
+            q.pop();
+            int index = LtoRDir ? i:width - i - 1; // Matlab agar direction left to right hai tabh toh normal, nahi toh index peeche se initiate kar do
+
+            // Push current value into current level
+            currLevel[index] = front->val;
+
+            // Push left and right nodes
+            if(front->left){
+                q.push(front->left);
+            }
+            if(front->right){
+                q.push(front->right);
+            }
+        }
+
+        LtoRDir = !LtoRDir; // Basically, toggle the current direction to it's opposite one
+        ans.push_back(currLevel);
+    }
+
+    return ans;
+}
+
+// Q8. Transform to Sum Tree (GFG)
+int sum(Node* root){
+    if(!root){
+        return 0;
+    }
+    if(!root->left && !root->right){ // Means leaf node
+        int temp = root->val;
+        root->val = 0;
+        return temp;
+    }
+    
+    int lsum = sum(root->left);
+    int rsum = sum(root->right);
+    int temp = root->val; // Current root ka data
+    
+    root->val = lsum + rsum;
+    return root->val + temp; 
+    
+}
+
+void toSumTree(Node *node)
+{
+    sum(node);
+} 
+
+
+// Q9. K-Sum Paths/Path Sum III (Leetcode-437) - V.V.Imp
+int ans = 0;
+
+void pathFromRoot(TreeNode* root, long long sum){
+    // Base Case
+    if(!root) return;
+
+    if(sum==root->val){
+        ++ans;
+    }
+
+    // Recursive Call
+    pathFromRoot(root->left,sum - root->val);
+    pathFromRoot(root->right,sum - root->val);
+
+}
+
+
+int pathSum(TreeNode* root, long long targetSum) {
+    if(root){ // NLR Traversal
+        pathFromRoot(root,targetSum);
+        pathSum(root->left,targetSum);
+        pathSum(root->right,targetSum);
+    }
+    return ans;
+    
+}
+
+// Q10. Sum of longest bloodline of a tree/ Sum of nodes on the longest path from root to leaf node (GFG)
+pair<int,int> height(Node *root){ // Modification of height function to store height and current sum
+    if(!root){
+        return {0,0};
+    }
+    
+    auto lh = height(root->left);
+    auto rh = height(root->right);
+    
+    int sum = root->val;
+    
+    if(lh.first==rh.first){
+        sum+= lh.second > rh.second? lh.second : rh.second;
+    }
+    else if(lh.first>rh.first){
+        sum+= lh.second;
+    }
+    else{
+        sum+=rh.second;
+    }
+    
+    return {max(lh.first,rh.first) + 1,sum};
+}
+
+int sumOfLongRootToLeafPath(Node *root)
+{
+    auto h = height(root);
+    return h.second;
+}
+
+// Q11. Maximum sum of Non-adjacent nodes - (GFG)
+pair<int,int> helper(Node* root){
+    // First will store sum including the current node, second will include sum not including the current node
+    if(!root) return {0,0};
+    
+    auto lsum = helper(root->left);
+    auto rsum = helper(root->right);
+    
+    // Sum including the Node
+    int a = root->val + lsum.second + rsum.second;
+    
+    // Sum NOT including the Node
+    int b = max(lsum.first,lsum.second) + max(rsum.first,rsum.second);
+    
+    return {a,b};
+}
+int getMaxSum(Node *root) 
+{
+    // Add your code here
+    auto ans = helper(root);
+    return max(ans.first,ans.second);
+}
+
+// Q12. 
 
 
 
