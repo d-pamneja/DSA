@@ -529,6 +529,233 @@ bool check(Node *root)
     
 }
 
+// Q16. Minimum Distance between two given nodes of a Binary Tree (GFG)
+Node* lowestCommonAncestor(Node* root, int a,int b) {
+    // Base Cases
+    if(root==NULL) return NULL;
+    if(root->val == a || root->val == b) return root;
+
+    // Recursive call
+    Node* left = lowestCommonAncestor(root->left,a,b);
+    Node* right = lowestCommonAncestor(root->right,a,b);
+
+    // Important Conditions
+    if(left!=NULL && right!=NULL){ // This will be LCA
+        return root;
+    }
+    else if(left==NULL && right!=NULL){ // Since left is not found, right node is it's own LCA
+        return right;
+    }
+    else if(left!=NULL && right==NULL){ // Since right is not found, left node is it's own LCA
+        return left;
+    }
+}
+
+int height(Node* root, int target){
+    if(!root) return 0;
+    
+    if(root->val==target){
+        return 1;
+    }
+    
+    int a = height(root->left,target);
+    int b = height(root->right,target);
+    
+    if(!a && !b){
+        return 0;
+    }
+    
+    return max(a,b) + 1;
+}
+
+int findDist(Node* root, int a, int b) {
+    Node* lca = lowestCommonAncestor(root,a,b);
+    
+    int first = height(lca,a); // This will be height of lca and first element 
+    int second = height(lca,b); // This will be height of lca and first element 
+    
+    // So here, first and second both will be having +1 extra each in them, se we reduce 2 (the +1 each will be the inclusion of common point)
+    
+    return first + second - 2;
+}
+
+// Q17. Check if tree is isomorphic (GFG)
+bool isIsomorphic(Node *root1,Node *root2){
+    // Base Case
+    if(!root1 && !root2){
+        return true;
+    }
+    else if(!root1 || !root2){ // If one exhausts before another, it is not 
+        return false;
+    }
+    
+    // If data only is not equal and current nodes, it is false
+    if(root1->val!=root2->val){
+        return false;
+    }
+    
+    // Case 1: Both the left sub trees are the same (LL)
+    bool Left1AndLeft2 = isIsomorphic(root1->left,root2->left);
+    
+    // Case 2: Both the right sub trees are the same (RR)
+    bool Right1AndRight2 = isIsomorphic(root1->right,root2->right);
+    
+    // Case 3: Right of Tree 1 and Left of Tree 2 is the same (RL)
+    bool Right1AndLeft2 = isIsomorphic(root1->right,root2->left);
+    
+    // Case 4: Left of Tree 1 and Right of Tree 2 is the same (LR)
+    bool Left1AndRight2 = isIsomorphic(root1->left,root2->right);
+    
+    // Now, for tree to be isomorphic, either BOTH the same directional should be true OR both the different directional should be true
+    return ((Left1AndLeft2 && Right1AndRight2) || (Right1AndLeft2 && Left1AndRight2));
+    
+}
+
+// Q18. Largest Sub-Tree Sum in a tree (GFG)
+int sum (Node* root,int &maxSum){ // Basically, maxSum will store the sum of the maximum sub tree till now
+    if(!root) return 0;
+    
+    int left = sum(root->left,maxSum);
+    int right = sum(root->right,maxSum);
+    
+    int currSum = root->val + left + right;
+    
+    if(currSum>maxSum){ // So here, we keep on storing the maxSum of all sub trees traversed
+        maxSum = currSum;
+    }
+    
+    return currSum;
+}
+
+int findLargestSubtreeSum(Node* root)
+{
+    if(!root) return 0;
+    
+    int maxSum = INT_MIN;
+    int currSum = sum(root,maxSum);
+    
+    return max(currSum,maxSum);
+}
+
+// Q19. Convert a BT to a Doubly Linked List (GFG)
+class Q19Sol{
+    Node* prev = NULL;
+    Node* head = NULL;
+
+    void linker(Node *root){
+        if(!root) return;
+        
+        // Inorder Travel - LNR
+        
+        linker(root->left);
+        
+        if(!prev){ // Agar prev exist nahi karti, matlab first node ki baat ho rahi hai so create head and put prev on that for first case
+            head = root;
+            prev = head;
+        }
+        else{
+            root->left = prev;
+            prev->right = root;
+        }
+        prev = root;
+        
+        linker(root->right);
+    }
+    //Function to convert binary tree to doubly linked list and return it.
+    Node * bToDLL(Node *root)
+    {
+        linker(root);
+        return head;
+    }
+};
+
+// Q20. Check Tree Traversal (GFG)
+// Use Construct Binary Tree from Inorder and Preorder Traversal question
+void CreateMapping(vector<int> &inorder,map<int,int>& mp,int n){
+    for(int i=0;i<n;i++){
+        mp[inorder[i]] = i;
+    }
+}
+
+
+Node* constructTreeFromPreAndInOrder(map<int,int> &ValueToIndexMap,vector<int> &preorder, vector<int> &inorder,int &preIndex,int inOrderStart,int inOrderEnd,int n){
+    // YAAD SE, PreOrderIndex needs to be passed BY REFERENCE
+    // Base Case
+    int size = n;
+    if(preIndex >= size || inOrderStart > inOrderEnd) {
+        return NULL;
+    }
+
+    // Processing
+
+    int element = preorder[preIndex];
+    preIndex++;
+
+    Node* root = new Node(element);
+
+    int position = ValueToIndexMap[element]; // Iske left mein lagengay 0 to position-1 tak ke element, iske right mein lagengay position+1 to (n-1) tak ke element
+
+    // Recursion
+    root->left = constructTreeFromPreAndInOrder(ValueToIndexMap,preorder,inorder,preIndex,inOrderStart,position-1,n);
+    root->right = constructTreeFromPreAndInOrder(ValueToIndexMap,preorder,inorder,preIndex,position+1,inOrderEnd,n);
+
+    return root;
+}
+
+Node* buildTree(vector<int> &preorder, vector<int> &inorder,int n) {
+    int size = n;
+    int preIndex = 0; // Mein yeh bhool Jata hoon ki this will be passed by reference
+    int inOrderStart = 0;
+    int inOrderEnd = size - 1;
+
+    map<int,int> ValueToIndexMap;
+    CreateMapping(inorder,ValueToIndexMap,n);
+
+    Node* root = constructTreeFromPreAndInOrder(ValueToIndexMap,preorder,inorder,preIndex,inOrderStart,inOrderEnd,n);
+    return root;
+}
+
+void makePostOrderFromTree(Node* root,vector<int> &constTree){
+    if(!root) return;
+    
+    //LRN
+    makePostOrderFromTree(root->left,constTree);
+    makePostOrderFromTree(root->right,constTree);
+    constTree.push_back(root->val);
+}
+
+bool checktree(int pre[], int in[], int pos[], int n) 
+{ 
+    vector<int> preTree;
+    for(int i=0;i<n;i++){
+        preTree.push_back(pre[i]);
+    }
+    
+    vector<int> inTree;
+    for(int i=0;i<n;i++){
+        inTree.push_back(in[i]);
+    }
+    
+    vector<int> posTree;
+    for(int i=0;i<n;i++){
+        posTree.push_back(pos[i]);
+    }
+    
+    Node* root = buildTree(preTree,inTree,n);
+    
+    vector<int> constTree;
+    makePostOrderFromTree(root,constTree);
+    
+    for(int i=0;i<n;i++){
+        if(constTree[i]!=posTree[i]){
+            return false;
+        }
+    }
+    
+    return true;
+} 
+
+
 
 
 int main(){
