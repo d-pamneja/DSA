@@ -353,10 +353,88 @@ int getMaxSum(Node *root)
     return max(ans.first,ans.second);
 }
 
-// Q12. 
+// Q12. Burning Tree (GFG) - V.V.Imp
+// Step1. Find the target in the tree
+// Step2. Create a mapping of each node and it's parent node
+// Step3. Burn the tree from the target node and keep track of the time taken to burn the tree
+Node* makeNodeToParentMappingAndFindTarget(Node* root, unordered_map<Node*,Node*> &parentMap, int target){
+    // Level order traversal se karte hai
+    queue<Node*> q;
+    Node * targetNode = NULL;
+    q.push(root);
+    parentMap[root] = NULL;
+    
+    
+    while(!q.empty()){
+        Node* front = q.front();
+        q.pop();
+        
+        if(front->val == target){ // Here, all values will be unique in tree
+            targetNode = front;
+        }
+        
+        if(front->left){
+            q.push(front->left);
+            parentMap[front->left]=front;
+        }
+        if(front->right){
+            q.push(front->right);
+            parentMap[front->right]=front;
+        }
+    }
+    
+    return targetNode;
+}
+
+int burnTheTree(unordered_map<Node*,Node*> &parentMap, Node* targetNode){
+    unordered_map<Node*,bool> isBurnt; // Mapping of each node and whether they are burnt or not
+    queue<Node*> q; // Stores the current queue which is being burned
+    
+    int t = 0;
+    
+    q.push(targetNode);
+    isBurnt[targetNode] = true;
+    
+    while(!q.empty()){
+        int size = q.size();
+        bool isFireSpreaded = false;
+        for(int i=0;i<size;++i){ // We are doing this for loop as each node burns left, right and parent AT THE SAME TIME, hence we will pick up 1 element from the queue and burn it across all directions possible
+            Node* front = q.front();
+            q.pop();
+            
+            if(front->left && !isBurnt[front->left]){ // If left exists and it's NOT burnt, we burn it and change it's status
+                q.push(front->left);
+                isBurnt[front->left] = true;
+                isFireSpreaded = true;
+            }
+            if(front->right && !isBurnt[front->right]){ // If right exists and it's NOT burnt, we burn it and change it's status
+                q.push(front->right);
+                isBurnt[front->right] = true;
+                isFireSpreaded = true;
+            }
+            if(parentMap[front] && !isBurnt[parentMap[front]]){ // If parent exists is NOT burnt, we burn it and change it's status
+                q.push(parentMap[front]);
+                isBurnt[parentMap[front]] = true;
+                isFireSpreaded = true;
+            }
+        }
+        
+        if(isFireSpreaded){
+            t++;
+        }
+        
+    }
+    
+    return t;
+}
 
 
-
+int minTime(Node* root, int target) 
+{
+    unordered_map<Node*,Node*> parentMap;
+    Node* targetNode = makeNodeToParentMappingAndFindTarget(root,parentMap,target);
+    return burnTheTree(parentMap,targetNode);
+}
 
 
 
