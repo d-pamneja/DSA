@@ -1115,6 +1115,14 @@ HOMEWORK NOTES: 40
 	14. Burning Tree
 	15. Find Duplicate Sumtrees
 	16. Left view of binary tree using level order traversal
+	17. Construct Binary Tree from String with Bracket Representation
+	18. Convert Binary tree into Doubly Linked List
+	19. Check Tree Traversal
+	20. Find Largest subtree sum in a tree
+	21. Find distance between 2 nodes in a Binary tree
+	22. Tree Isomorphism Problem
+	23. Check if all leaf nodes are at same level or not
+	
 
 ```
 

@@ -470,6 +470,64 @@ vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
 };
 
 // Q14. Morris Traversal (GFG) - V.V.V.V.Imp
+// It is a variant of Inorder Traversal. Here, the time complexity is O(N) as we have to visit each node, 
+// however, the space complexity is O(1) as we are not using any extra space.
+// Dry run yaad se karna, thodi tedhi kheer hai
+vector<int> inorderTraversal(TreeNode* root) {
+    vector<int> ans;
+
+    TreeNode* curr = root;
+    while(curr){
+        if(curr->left==NULL){ // Agar left nahi hai, visit the current node and move to right
+            ans.push_back(curr->val);
+            curr = curr->right;
+        }
+        else{ // means left exists, toh links ko modify karte hai
+            // So, first we find it's inorder predecessor i.e. done by ek baar left jao, phir right jatte raho jab tak null na ho
+            TreeNode* pred = curr->left;
+            while(pred->right!=curr && pred->right){ // Matlab agar pred ka right already curr pe set NAHI hai, tabhi usko set karo
+                pred = pred->right;
+            }
+
+            // if pred ka right node is NULL, then go to left AFTER establishing link of predecessor to current
+            if(pred->right==NULL){
+                pred->right = curr; // This basically points the pred to curr, basically a link to traverse back to it's curr. Hum pred ke iss link ki madad se vapis curr pe aa sakte hai without recursive traversal, effectively reducing travel time to O(1) instead of O(N)
+                curr = curr->left;
+            }
+            else{ // Means left node is already visted, so we visit the right node AFTER visiting current node while REMOVING the link
+                pred->right = NULL;
+                ans.push_back(curr->val);
+                curr = curr->right;
+            }
+        }
+    }
+    return ans;
+}
+
+// Q15. Check if all leaves are at same level (GFG)
+set<int> s;
+void solve(Node* root, int count){
+    // Basically, we will maintain a count as a marker for level and then add levels to a set.
+    // As a set stores unique values, it will have only 1 value if all leaf nodes have the same level
+    if(!root){
+        return;
+    }
+    
+    if(root->left==NULL && root->right==NULL){
+        s.insert(count);
+    }
+    
+    solve(root->left,count+1);
+    solve(root->right,count+1);
+}
+
+bool check(Node *root)
+{
+    int count = 0;
+    solve(root,count);
+    return s.size()==1;
+    
+}
 
 
 
