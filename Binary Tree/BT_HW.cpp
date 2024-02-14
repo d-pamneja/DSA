@@ -436,6 +436,40 @@ int minTime(Node* root, int target)
     return burnTheTree(parentMap,targetNode);
 }
 
+// Q13. Find Duplicate Subtrees (Leetcode-652) - V.V.Imp
+class SolQ13{
+    vector<TreeNode*> ans;
+unordered_map<string,int> subTreeMap; // {Encoding->Occurenece}
+
+string preorder(TreeNode* root){ // Basically, we will create string encodings of each node to make them and their respective sub-trees unique
+    if(!root) return "N"; // Meaning Null
+
+    string curr = to_string(root->val);
+    string left = preorder(root->left);
+    string right = preorder(root->right);
+
+    string Encoded = curr + "," + left + "," + right;
+
+    if(subTreeMap.find(Encoded)!=subTreeMap.end()){ // If this condition is true, means this EXACT encoded string has entered the map before i.e. exists in map
+        if(subTreeMap[Encoded]==1){ // S.IMP: If it exists only once before, i.e. this is the second occurence, only then is it duplicate and we add it to ans. 
+            ans.push_back(root); // Since we might have multiple duplicates, we only store ans at the first occurence of a duplicate i.e. same entry twice to satisfy the constraints of the question
+        }
+        subTreeMap[Encoded]++;
+    }
+    else{ // Does not exist in map so create it
+        subTreeMap[Encoded] = 1;
+    }
+
+    return Encoded;
+}
+
+vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
+    preorder(root);
+    return ans;
+}
+};
+
+// Q14. Morris Traversal (GFG) - V.V.V.V.Imp
 
 
 
