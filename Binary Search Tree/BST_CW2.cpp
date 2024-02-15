@@ -18,6 +18,15 @@ public:
   }
 };
 
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
 // Q1. Construct BST from Inorder
 Node* BSTfromInorder(int inorder[],int s,int e){
   // Base Case
@@ -89,6 +98,91 @@ bool isValidBST(Node* root) {
     return rangeCheckBST(root,lower,upper);
 
 }
+
+// Q3. LCA of BST - (Leetcode 235)
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    // Base Case
+    if(!root) return NULL;
+
+    // Case 1 : If both are going in different directions, then current node is LCA
+    if((root->val > p->val)&&(root->val < q->val)){ // Matlab P left mein hai AND Q right mein
+        return root;
+    }
+
+    // Case 2 : If both are going in different directions, then current node is LCA
+    if((root->val < q->val)&&(root->val > p->val)){ // Matlab Q left mein hai AND P right mein
+        return root;
+    }
+
+    // Case 3 
+    if((p->val<root->val)&&(q->val<root->val)){ // Matlab dono elements left sub tree mein hai 
+        return lowestCommonAncestor(root->left,p,q);
+    }
+
+    // Case 4
+    if((p->val>root->val)&&(q->val>root->val)){ // Matlab dono elements right sub tree mein hai 
+        return lowestCommonAncestor(root->right,p,q);
+    }
+
+    return root;
+    
+}
+
+// Q4. Kth Smallest Element in a BST - (Leetcode 230)
+int kthSmallest(TreeNode* root, int &k) {
+    if(!root) return -1;
+
+    //LNR
+    int left = kthSmallest(root->left,k);
+    if(left!=-1){ // Matlab ki agar left sub tree mein koi answer mil gaya hai, wahi return kar do 
+        return left ;
+    }
+
+    k--;
+    if(k==0){
+        return root->val;
+    }
+
+    int right = kthSmallest(root->right,k);
+    if(right!=-1){ // Matlab ki agar right sub tree mein koi answer mil gaya hai, wahi return kar do
+        return right;
+    }
+
+    return -1; 
+}
+
+// Q5. Two Sum IV - Input is a BST (Leetcode-653)
+void inorderSort(vector<int> &inorder,TreeNode* root){
+    //LNR
+    if(!root) return;
+
+    inorderSort(inorder,root->left);
+    inorder.push_back(root->val);
+    inorderSort(inorder,root->right);
+
+}
+
+bool findTarget(TreeNode* root, int k) {
+    vector<int> inorder;
+    inorderSort(inorder,root);
+
+    int s = 0;
+    int e = inorder.size() - 1;
+
+    while(s<e){
+        if(inorder[s]+inorder[e]==k){
+            return true;
+        }
+        else if(inorder[s]+inorder[e]<k){
+            s++;
+        }
+        else{
+            e--;
+        }
+    }
+    return false;
+}
+
 
 int main(){
 
