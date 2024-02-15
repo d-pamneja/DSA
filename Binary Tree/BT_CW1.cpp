@@ -264,10 +264,48 @@ int diameterOfBinaryTree(TreeNode* root) { // BRUTE FORCE APPROACH if we do heig
 // Q3. Generics tree
 
 // Q4. READ ARTICLE: Skew tree
+// A skew tree is a binary tree that has only one child of each node i.e. har node ka ek hi child node hai. It can either be left-skewed or right-skewed. 
+// A left-skewed binary tree is a binary tree where every node, except the leaf node, has only one child at the left, and the right child is NULL. 
+// Similarly, a right-skewed binary tree is a binary tree where every node, except the leaf node, has only one child at the right, and the left child is NULL.
 
 // Q5. READ ARTICLE: BFS and DFS Algorithm
+/*
+BFS: Breadth First Search
+It is a vertex-based technique for finding the shortest path in the graph.
+It uses a Queue data structure that follows first in first out. In BFS, one vertex is selected at a time when it is visited and marked then its adjacent are visited and stored in the queue. It is slower than DFS. 
+Agar asan bhasha me samjhe toh, BFS me hum ek node ko visit karte hai, uske adjacent nodes ko queue me daal dete hai, phir us node ko pop karke uske adjacent nodes ko queue me daal dete hai, and so on. Matlab ki level by level traverse karte hai.
+*/
+
+/*
+ DFS: Depth First Search
+ It is an edge-based technique. It uses the Stack data structure and performs two stages, first visited vertices are pushed into the stack, and second if there are no vertices then visited vertices are popped. 
+ Agar asan bhasha me samjhe toh, DFS me hum ek node ko visit karte hai, uske adjacent nodes ko stack me daal dete hai, phir us node ko pop karke uske adjacent nodes ko stack me daal dete hai, and so on. 
+ Matlab ki ek node ke adjacent nodes ko visit karte hai, phir uske adjacent nodes ke adjacent nodes ko visit karte hai, and so on. Hum level by level nahi traverse karte hai, ulta ek node ko pura traverse karte hai, answer mila toh theek, nahi toh phir uske adjacent nodes ko pura traverse karte hai, and so on.
+ */
+
 
 // Q6. READ ARTICLE: Complete and perfect binary tree
+// Complete Binary Tree:
+/*A Binary Tree is a Complete Binary Tree if all the levels are completely filled except possibly the last level and the last level has all keys as left as possible.
+
+A complete binary tree is just like a full binary tree, but with two major differences:
+
+1) Every level except the last level must be completely filled.
+2) All the leaf elements must lean towards the left.
+3) The last leaf element might not have a right sibling i.e. a complete binary tree doesn’t have to be a full binary tree
+
+Asan bhasha me samjhe toh, complete binary tree me har level except the last level pura filled hota hai, and last level me bhi agar koi node nahi hai toh left se start hota hai, and right se end hota hai. 
+*/
+
+// Perfect Binary Tree:
+/*
+A Binary tree is a Perfect Binary Tree in which all the internal nodes have two children and all leaf nodes are at the same level. 
+The following are examples of Perfect Binary Trees. 
+
+A perfect binary tree is a type of binary tree in which every internal node has exactly two child nodes and all the leaf nodes are at the same level.
+Asan bhasha me samjhe toh, perfect binary tree me har internal node ke 2 children hote hai, and all leaf nodes same level pe hote hai.
+*/
+
 
 
 int main() {
