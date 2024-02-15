@@ -6,6 +6,8 @@ This must be true for each node n. Yaani ki for each node n, uske left ke saare 
 Yeh condition individual node se hi commence hoti hai, yaani ki for each node, uske left child usse chota hoga and right child usse bada hoga.
 */
 
+
+
 #include <iostream>
 #include <queue>
 #include <map>
