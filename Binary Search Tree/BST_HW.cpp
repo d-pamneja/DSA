@@ -1,6 +1,7 @@
 #include <iostream>
 #include <queue>
 #include <map>
+#include <stack>
 #include <climits>
 
 using namespace std;
@@ -10,11 +11,13 @@ class Node{
 	int data;
 	Node* left;
 	Node* right;
+    Node* next;
 
 	Node(int value) {
 		this->data = value;
 		this->left = NULL;
 		this->right = NULL;
+        this->next = NULL;
 	}
 };
 
@@ -307,7 +310,7 @@ class Q8Sol {
         }
     }
     
-    int canRepresentBST(int arr[], int N) {
+    int canRepresentBST(int arr[], int N) { // TC: O(N), SC: O(1)
         int min = INT_MIN;
         int max = INT_MAX;
         buildCheck(min,max,arr,N);
@@ -318,6 +321,150 @@ class Q8Sol {
 
 // Q9. Merge Two BSTs (GFG) - V.V.V.V.V IMP
 
+
+// Q10. Binary Tree to BST (GFG)
+void createVector(Node* root, vector<int> &ans){
+    if(!root) return;
+    
+    // LNR
+    createVector(root->left,ans);
+    ans.push_back(root->data);
+    createVector(root->right,ans);
+}
+
+Node* createTreefromInorder(vector<int> ans,int s,int e){
+    if(s>e) return NULL;
+    int mid = ((e-s)/2) + s;
+    
+    Node* root = new Node(ans[mid]);
+    
+    root->left = createTreefromInorder(ans,s,mid-1);
+    root->right = createTreefromInorder(ans,mid+1,e);
+    
+    return root;
+    
+}
+
+Node *binaryTreeToBST (Node *root){ // TC: O(NlogN), SC: O(N)
+    vector<int> ans;
+    createVector(root,ans);
+    sort(ans.begin(),ans.end());
+    
+    int s = 0;
+    int e = ans.size() - 1;
+    
+    Node* newroot = createTreefromInorder(ans,s,e);
+    return newroot;
+}
+
+// Q11. Kth Largest Element in BST (GFG)
+void finder(Node* root,int &k,int &ans){
+    if(!root) return;
+    
+    // RNL (Cause kth greatest dhund rahe hai and as BST is sorted, phele left mein jane ka)
+    finder(root->right,k,ans);
+    
+    k--;
+    if(k==0){
+        ans = root->data;
+        return;
+    }
+    
+    finder(root->left,k,ans);
+
+    
+}
+int kthLargest(Node *root, int K){ // TC: O(H), SC: O(1)
+    int k = K;
+    int ans = -1;
+    finder(root,k,ans);
+    
+    return ans;
+}
+
+// Q12. Populate Inorder Successor for all nodes (GFG)
+void InorderPoint(Node* root, Node* &successor){
+    if(!root) return;
+    
+    // RNL (Since we are finding successor of each node, we will travel in reverse inorder, as in BST, the inroder succesor for each node from RNL will be it's previous node)
+    InorderPoint(root->right,successor);
+    
+    root->next = successor;
+    successor = root;
+    
+    InorderPoint(root->left,successor);
+}
+
+void populateNext(Node *root){
+    // RNL 
+    Node* successor = NULL;
+    InorderPoint(root,successor);
+}
+
+// Q13. Brothers From Different Roots (GFG) - (IMP) - Optimal Approach
+// Now, we will use the concept of Inorder and Reverse Inorder Traversal to find the pairs, 
+// however, this is the best approach as it uses the property of BST and instead of using O(N) space, it uses O(H) space as we do the comparison in O(1) time via stack
+// Stack apporach is very important as this reduces space complexity and is the same way how the computer does it's traversal
+// DRY RUN this many times as this is thedi kheer
+
+int countPairs(Node* root1, Node* root2, int x){
+    
+    stack<Node*> st1;
+    stack<Node*> st2;
+    
+    Node* a = root1;
+    Node* b = root2;
+    
+    int ans = 0;
+    
+    while(true){
+        
+        while(a){
+            // Moving Inorder (LNR)
+            st1.push(a);
+            a = a->left;
+        }
+        
+        while(b){
+            // Moving Rev Inorder (RNL)
+            st2.push(b);
+            b = b->right;
+        }
+        
+        if(st1.empty()||st2.empty()){
+            // Means traversal complete and all nodes checked, so break it
+            break;
+        }
+        
+        auto atop = st1.top();
+        auto btop = st2.top();
+        
+        int sum = atop->data + btop->data;
+        
+        if(sum == x){
+            // Means ek pair mila, toh ans ko badha kar inn dono elements ko aage badha do
+            ans++;
+            st1.pop();
+            st2.pop();
+            
+            // Abh jatte waqt, dono stacks mein tops ke right aur left element dalte jao taaki traversal complete ho paye jo upar likha hai 
+            a = atop->right; // This is right as phele humne stack 1 mein saare left dalle (L), comparison kiya (N) aur abh jate hue 'a' mein (R) ka part complete karke jaa rahe hai
+            b = btop->left;// This is left as phele humne stack 2 mein saare right dalle (R), comparison kiya (N) aur abh jate hue 'b' mein (L) ka part complete karke jaa rahe hai
+        }
+        else if(sum < x){
+            // Yaani abh stack 1 se agge badho and jate hue uska right push kar do to complete traversal
+            st1.pop();
+            a = atop->right;
+        }
+        else{
+            // Yaani abh stack 2 se agge badho and jate hue uska left push kar do to complete traversal
+            st2.pop();
+            b = btop->left;
+        }
+    }
+    return ans;
+
+}
 
 
 int main(){
