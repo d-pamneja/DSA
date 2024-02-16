@@ -320,6 +320,47 @@ class Q8Sol {
 };
 
 // Q9. Merge Two BSTs (GFG) - V.V.V.V.V IMP
+ vector<int> merge(Node *root1, Node *root2){
+    // We do this my doing inorder traversal in both BST's via stacks
+    stack<Node*>st1;
+    stack<Node*>st2;
+    
+    Node* a = root1;
+    Node* b = root2;
+    
+    vector<int> ans;
+    
+    bool compar = false;
+    
+    while(a||b||!st1.empty()||!st2.empty()){
+        
+        while(a){
+            st1.push(a);
+            a = a->left;
+        }
+        
+        while(b){
+            st2.push(b);
+            b = b->left;
+        }
+        
+        // IMPORTANT CONDITIONAL THING BELOW, yaha mein galti karta hoon
+        if(st2.empty()||!st1.empty() && (st1.top()->data<=st2.top()->data)){ // Agar stack 1 mein chota element hai YA TOH stack 2 khali hi ho gaya hai, toh stack 1 se add karte raho. Par yeh dhyan rakho, ki stack 1 KHALI nahi hona chahiye. This ensures that dono stack saath mein khali ho toh kuch na karre
+            auto atop = st1.top();
+            ans.push_back(atop->data);
+            st1.pop();
+            a = atop->right;
+        }
+        else{ // Matlab ya toh stack B mein element hai aur A mein nahi, OR that B ka top element chota hai A ke top element se
+            auto btop = st2.top();
+            ans.push_back(btop->data);
+            st2.pop();
+            b = btop->right;
+        }
+    }
+    
+    return ans;
+}
 
 
 // Q10. Binary Tree to BST (GFG)
@@ -464,6 +505,99 @@ int countPairs(Node* root1, Node* root2, int x){
     }
     return ans;
 
+}
+
+// Q14. Flatten BST to Sorted List (GFG) - (IMP) - Optimal Approach
+void flatter(Node* root,Node* &prev){
+    if(!root) return;
+    
+    // LNR
+    flatter(root->left,prev);
+    
+    prev->left = NULL; // Left pointer ko hatta do
+    prev->right = root; // prev ke right ko current walle pe le aao, taaki prev aur curr flatten ho jaye
+    prev = root; // root ko naya prev bana do, taaki yeh process end tak chal jaye
+    
+    flatter(root->right,prev);
+}
+
+Node *flattenBST(Node *root){ // TC: O(N), SC: O(H)
+    Node* prev = new Node(-1); // DUMMY NODE, taaki ans ban jaye
+    Node* dummy = prev;
+    flatter(root,prev);
+    
+    // Now, prev will be at last element, toh prev ke left aur right dono ko NULL kar de
+    prev->left = prev->right = NULL;
+    
+    
+    // Abh, dummy node ke left ko NULL karo and right ki help se new root bana do, dummy ko isolate karke delete kar do 
+    dummy->left = NULL;
+    root = dummy->right;
+    dummy->right = NULL;
+    
+    delete dummy;
+    
+    return root;
+}
+
+// If you want to sort the LL in decreasing order, bas right ki recursive call phele kar de, phir node ke SAME operations and left ki recursive call kar de. Basically, same code above but with RNL traversal
+
+// Q15. Replace elements with the least Greater elements to it Right (GFG) - (V.V.IMP) - Optimal Approach
+Node* insertBST(Node* root,int val,int &successor){
+    if(!root) return new Node(val); // Agar waha koi element nahi, toh naya element bana kar de do
+    
+    if(val>=root->data){ // Agar incoming element root ki value se bada barabar hai, toh we will send it to the right of current root
+        root->right = insertBST(root->right,val,successor);
+    }
+    else{ // Agar incoming element chota hai root ki value se, TOH HO SAKTA HAI ki yeh root humare iss element ka successor ho, so update successor and keep on moving to left
+        successor = root->data;
+        root->left = insertBST(root->left,val,successor);
+    }
+    
+    return root;
+}
+
+
+vector<int> findLeastGreater(vector<int>& arr, int n) { // TC: O(N*logN), SC: O(N)
+    vector<int> ans(n,-1); // Initialise the answer with all starting entries as -1
+    Node* root = NULL;
+    for(int i=n-1;i>=0;i--){ // Reverse Loop
+        int successor = -1; // Is node ke liye successor initialise kar do
+        root = insertBST(root,arr[i],successor); // Yeh function humare root se BST banata rahega taking each element and at the same time, yeh inserted element ke inorder successor ko bhi pakad ke le ayega
+        ans[i] = successor;
+    }
+    
+    return ans;
+    
+}
+
+// Q16. Construct BST from Postorder Traversal (GFG) - (IMP) - Optimal Approach
+Node* createPost(int post[],int min,int max,int &i){
+   // Base Case 1 : Agar i out of bound chala jaye
+   if(i<0) return NULL;
+   
+   // Base Case 2: Agar new element humari range mein nahi hai, toh bhi NULL
+   if(post[i]<=min || post[i]>=max) return NULL;
+   
+   // Abh existing element ko ek node bana do
+   Node* root = new Node(post[i--]);
+   
+   // Iss root ke left aur right bana kar (new range ke hisab se) iss root se attach kar do, since post order hai toh right phele
+   root->right = createPost(post,root->data,max,i);
+   root->left = createPost(post,min,root->data,i); 
+   
+   
+   return root;
+    
+}
+
+Node *constructTree (int post[], int size){
+    int min = INT_MIN;
+    int max = INT_MAX;
+    
+    int i = size-1;
+    
+    return createPost(post,min,max,i);
 }
 
 
