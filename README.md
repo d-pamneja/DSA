@@ -1180,6 +1180,12 @@ HOMEWORK NOTES: 43
 	10. Replace elements with the least Greater elements to it Right
 	11. Valid BST from Preorder
 	12. Merge two BSTs
+	13. Find Kth largest element in a BST
+	14. Largest BST in a Binary Tree
+	15. Given "n" appointments, find the conflicting appointments
+	16. Convert Binary tree into BST
+	17. Populate Inorder successor of all nodes
+	18. Find minimum swaps required to convert a Binary tree into BST
 
 ```
 
