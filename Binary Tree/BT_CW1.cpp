@@ -262,6 +262,27 @@ int diameterOfBinaryTree(TreeNode* root) { // BRUTE FORCE APPROACH if we do heig
 }
 
 // Q3. Generics tree
+class GenNode1{ // Using Array to store children. However, the issue here is that N should be known before hand and is fixed
+  public: 
+    int * arr;
+    int data;
+
+    GenNode1(int val,int size){
+      arr = new int[size];
+      this->data = val;
+    }
+};
+
+class GenNode2{ // Here, we are using dynamic array to store children. So, the size is not fixed and can be changed as per the requirement
+  public: 
+    int data;
+    vector<GenNode2*> children;
+
+    GenNode2(int val){
+      this->data = val;
+    }
+};
+
 
 // Q4. READ ARTICLE: Skew tree
 // A skew tree is a binary tree that has only one child of each node i.e. har node ka ek hi child node hai. It can either be left-skewed or right-skewed. 
@@ -288,7 +309,7 @@ Agar asan bhasha me samjhe toh, BFS me hum ek node ko visit karte hai, uske adja
 // Complete Binary Tree:
 /*A Binary Tree is a Complete Binary Tree if all the levels are completely filled except possibly the last level and the last level has all keys as left as possible.
 
-A complete binary tree is just like a full binary tree, but with two major differences:
+A complete binary tree is just like a full binary tree, but with three major differences:
 
 1) Every level except the last level must be completely filled.
 2) All the leaf elements must lean towards the left.
