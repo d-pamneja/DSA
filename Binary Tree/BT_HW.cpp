@@ -755,6 +755,56 @@ bool checktree(int pre[], int in[], int pos[], int n)
     return true;
 } 
 
+// Q21. Construct Binary Tree from String Representation (GFG) - V.V.Imp
+Node* createTree(string s,int &start){
+    if (s.size() == 0 || start >= s.size())
+        return NULL;
+    
+    int num = 0;
+    while (start < s.size() && s[start] != '(' && s[start] != ')') { // Jab tak number milta jaye banate raho
+        int num_here = (int)(s[start] - '0');
+        num = num * 10 + num_here;
+        start = start + 1;
+    }
+    
+    Node* root = NULL;
+    if(num > 0){ // Agar toh number exist karta hai, node bana do
+        root = new Node(num);
+    }
+    
+    // As soon as we see first right parenthesis from the
+    // current node we start to construct the tree in the
+    // left
+    if (start < s.size() && s[start] == '(') { // Jaise hi open bracket dikhe, matlab previous node ke left ka tree bana do
+        start = start + 1;
+        root->left = createTree(s, start);
+    }
+    if (start < s.size() && s[start] == ')'){ // Jaise hi close bracket dikha, matlab root->left ka kaam done, toh start ko agge badha kar root vapis kar do
+        start = start + 1;
+        return root;
+    }
+    
+    // As soon as we see second right parenthesis from the
+    // current node we start to construct the tree in the
+    // right
+    if (start < s.size() && s[start] == '(') { // Jaise hi phirse open bracket dikhe, matlab previous node ke right ka tree bana do
+        start = start + 1;
+        root->right = createTree(s, start);
+    }
+    if (start < s.size() && s[start] == ')') // Jaise hi close bracket dikha, matlab root->right ka kaam done, toh start ko agge badha do
+        start = start + 1;
+        
+    return root; // Finally, root ko vapis kar do
+}
+    
+Node *treeFromString(string str){
+    int start = 0;
+    Node* root = createTree(str,start);
+    
+    return root;
+
+}
+
 
 
 
