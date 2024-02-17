@@ -592,48 +592,35 @@ Node* createPost(int post[],int min,int max,int &i){
 }
 
 // Q17. Largest BST in a Binary Tree (GFG) - V.V.V.V.V IMP
-
- int giveSizeBST(Node* root){
-        if(!root) return 0;
-        
-        return giveSizeBST(root->left) + giveSizeBST(root->right) + 1;
+ vector<int> check(Node* root,int &ans){
+    // If root is null, return size of tree as 0, minimum value as INT_MAX and max value as INT_MIN
+    if(!root) return {INT_MAX,INT_MIN,0};
+    
+    vector<int> left = check(root->left,ans);
+    vector<int> right = check(root->right,ans);
+    
+    // Agar left ki max value zyada hai humare current node se YA right ki min value chotti hai humare current node se, matlab BST nahi hai apna current node, toh false dene ka
+    if(left.empty() || right.empty() || left[1]>=root->data || right[0]<=root->data){
+        return {INT_MIN,INT_MAX,0}; //
     }
     
-    bool checkBST(Node* root,int min, int max){
-        if(!root) return true;
-        
-        // Now, if current val exceeds min max range, return false
-        if(root->data <=min || root->data >=max){
-            return false;
-        }
-        
-        bool left = checkBST(root->left,min,root->data);
-        bool right = checkBST(root->right,root->data,max);
-        
-        return left&&right;
-    }
+    int size = left[2] + right[2]+1;
+    ans = max(size,ans);
+    
+    
+    return {min(left[0], root->data), max(right[1], root->data),size};
+}
 
-int largestBst(Node *root){ // TC: O(N^2), SC: O(H)
-    	//Your code here
-    	if(!root) return 0;
-    	
-    	int min = INT_MIN;
-    	int max = INT_MAX;
-    	
-    	if(checkBST(root,min,max)) return giveSizeBST(root); // Matlab agar current node se ek BST hai, seedha uska size vapis kar do
-    	
-    	// Nahi toh seedha root ke left aur right mein dekho koi BST toh nahi
-    	
-    	int left = largestBst(root->left);
-    	int right = largestBst(root->right);
-    	
-    	// Jo bhi sabse max BST aya hoga return kar do
-    	if(left>right){
-    	    return left;
-    	}
-    	else{
-    	    return right;
-    	}
+int largestBst(Node *root){ // TC: O(N), SC: O(N)
+    //Your code here
+    if(!root) return 0;
+    
+
+    int ans = 1;
+    check(root,ans);
+    
+    return ans;
+    
 }
 
 // Q18. Minimum Swaps to convert Binary Tree to Binary Search Tree (GFG) - V.V.V.V.V IMP
