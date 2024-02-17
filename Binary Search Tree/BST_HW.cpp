@@ -591,6 +591,102 @@ Node* createPost(int post[],int min,int max,int &i){
     
 }
 
+// Q17. Largest BST in a Binary Tree (GFG) - V.V.V.V.V IMP
+
+ int giveSizeBST(Node* root){
+        if(!root) return 0;
+        
+        return giveSizeBST(root->left) + giveSizeBST(root->right) + 1;
+    }
+    
+    bool checkBST(Node* root,int min, int max){
+        if(!root) return true;
+        
+        // Now, if current val exceeds min max range, return false
+        if(root->data <=min || root->data >=max){
+            return false;
+        }
+        
+        bool left = checkBST(root->left,min,root->data);
+        bool right = checkBST(root->right,root->data,max);
+        
+        return left&&right;
+    }
+
+int largestBst(Node *root){ // TC: O(N^2), SC: O(H)
+    	//Your code here
+    	if(!root) return 0;
+    	
+    	int min = INT_MIN;
+    	int max = INT_MAX;
+    	
+    	if(checkBST(root,min,max)) return giveSizeBST(root); // Matlab agar current node se ek BST hai, seedha uska size vapis kar do
+    	
+    	// Nahi toh seedha root ke left aur right mein dekho koi BST toh nahi
+    	
+    	int left = largestBst(root->left);
+    	int right = largestBst(root->right);
+    	
+    	// Jo bhi sabse max BST aya hoga return kar do
+    	if(left>right){
+    	    return left;
+    	}
+    	else{
+    	    return right;
+    	}
+}
+
+// Q18. Minimum Swaps to convert Binary Tree to Binary Search Tree (GFG) - V.V.V.V.V IMP
+void Inorder(vector<int>&A, vector<int>&in,int index){
+    // Now, we know that if it index crosses the size-1, we end the function
+    if(index>=A.size()){
+        return;
+    }
+    
+    //LNR
+    
+    // Now, it is given that (2*index + 1) is the left child and (2*index + 2) is the right child, so we use that in our traversal
+    Inorder(A,in,2*index + 1);
+    in.push_back(A[index]);
+    Inorder(A,in,2*index + 2);
+}
+int minSwaps(vector<int>&A, int n){
+    // 1 - find inorder traversal of binary tree using level order traversal 
+    vector<int> in;
+    int index = 0;
+    Inorder(A,in,index);
+
+    // 2- make a vector with pair where pair.first will be value in inorder and pair.second will be index 
+    vector<pair<int,int>> v; 
+    for(int i=0;i<in.size();i++){
+        pair<int,int> p;
+        p.first = in[i];
+        p.second = i;
+        v.push_back(p);
+    }
+    
+    // 3- then sort the vector acording to values 
+    sort(v.begin(),v.end());
+    
+    // 4- then check the index of sorted vector it is on right postion on or not if not then swap it and make swap++
+    int swaps = 0;
+    for(int i=0;i<v.size();i++){
+        pair<int,int> p= v[i];
+        if(p.second ==i){ // Matlab agar humare vector mein yeh index sahi jagah pe pada hai toh chalte raho
+            continue;
+        }
+        else{ // Nahi, toh matlab ek swap lagega abhi, toh count badha kar swap kar do uss jagah se jaha par dusra padha hai
+            swaps++;
+            swap(v[i],v[v[i].second]);
+            i--; // Ek baar i ko ek step peeche lejakar phir check karo
+        }
+    }
+    
+    return swaps;
+    
+    
+}
+
 Node *constructTree (int post[], int size){
     int min = INT_MIN;
     int max = INT_MAX;
