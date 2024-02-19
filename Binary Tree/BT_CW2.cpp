@@ -199,7 +199,7 @@ void CreateMapping(vector<int>& inorder,map<int,int>& mp){
 
 
 TreeNode* constructTreeFromPostAndInOrder(map<int,int> &ValueToIndexMap,vector<int>& postorder, vector<int>& inorder,int &postIndex,int inOrderStart,int inOrderEnd){
-    // YAAD SE, PreOrderIndex needs to be passed BY REFERENCE
+    // YAAD SE, PostOrderIndex needs to be passed BY REFERENCE
     // Base Case
     int size = inorder.size();
     if(postIndex <0 || inOrderStart > inOrderEnd) {
