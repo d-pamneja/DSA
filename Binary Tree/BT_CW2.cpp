@@ -20,8 +20,6 @@ struct Node {
 };
 
 
-
-
 // Q1. Balanced Binary Tree (Leetcode - 110)
 // A tree is a balanced tree if at any given node, the height of left sub-tree and right sub-tree is AT MOST 1.
 
